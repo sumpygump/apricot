@@ -1,0 +1,41 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Apricot cli script 
+ *
+ * @package Apricot
+ */
+
+require 'init.php';
+
+$config = new Apricot\Config(
+    'app/config/config.ini',
+    array(),
+    array('{app_root}' => APP_ROOT)
+);
+
+// Mark as in a terminal
+$config->output = 'term';
+
+// Setup and initialize ArgV object
+$args = new Qi_Console_ArgV(
+    $argv,
+    array(
+        'arg:command'  => 'Desired command',
+        'arg:argument' => 'Argument to pass to command',
+    )
+);
+
+$_KERNEL = new Apricot\Kernel($config);
+Apricot\Exception\ExceptionHandlerConsole::initHandlers($_KERNEL);
+
+if (!$args->command) {
+    $commandName = 'index';
+} else {
+    $commandName = $args->command;
+}
+
+$commandClassName = $_KERNEL->loadCommand($commandName);
+
+$command = new $commandClassName($_KERNEL);
+$command->execute($args);

@@ -1,0 +1,8 @@
+<h2><?php echo $this->heading; ?></h2>
+
+<?php if ($this->shouldDisplayException) { ?>
+    <h3><?php echo $this->exception->getMessage(); ?></h3>
+    <p>Http Status Code: <?php echo $this->httpCode; ?></p>
+    <p>Error logged as number <?php echo $this->errorNumber; ?></p>
+    <?php echo \Apricot\ExceptionHandler::displayException($this->exception); ?>
+<?php } //endif ?>

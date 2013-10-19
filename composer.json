@@ -1,0 +1,22 @@
+{
+    "name": "sumpygump/apricot",
+    "type": "library",
+    "description": "Web Framework",
+    "homepage": "http://quantalideas.com/code/apricot",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jansen Price",
+            "email": "jansen.price@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-0" : {
+            "Apricot\\" : "lib/"
+        }
+    }
+}
+
