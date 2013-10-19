@@ -145,18 +145,27 @@ class Manager
         if (!isset($this->_extensions[$name])) {
             // Handle special case where extension options define the exact 
             // location of extensions
-            if (isset($options->path)) {
-                $extension = $this->getExtensionOutsidePath($name, $options);
-                if ($extension) {
-                    return $extension;
+            if (isset($options->class)) {
+                if (!class_exists($options->class)) {
+                    if (isset($options->path)) {
+                        $extension = $this->getExtensionOutsidePath($name, $options);
+                        if ($extension) {
+                            return $extension;
+                        }
+                    }
+                }
+                $className = $options->class;
+            } else {
+                $className = $this->_namespace . '\\' . $name;
+            }
+
+            // Attempt to autoload first
+            if (!class_exists($className)) {
+                if (!$this->loadExtension($name)) {
+                    return false;
                 }
             }
 
-            if (!$this->loadExtension($name)) {
-                return false;
-            }
-
-            $className = $this->_namespace . '\\' . $name;
             $extension = $this->makeExtension($className, $options);
 
             $extension->register();
