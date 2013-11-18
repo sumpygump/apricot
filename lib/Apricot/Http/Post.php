@@ -33,6 +33,7 @@ class Post extends Params
         if (null === $data) {
             $this->populate($_POST);
         }
+
         parent::__construct($data, $options);
     }
 }

@@ -509,61 +509,6 @@ class Qi_Db_PdoSqlite
     }
 
     /**
-     * Creates an insert string from an array of col=>value.
-     *
-     * @param string $table The name of the table
-     * @param data $a The array of data for which to get a string
-     * @return string The sql string
-     * @deprecated Use insert() instead
-     */
-    public function get_insert_string($table, $a)
-    {
-        $q_cols = '';
-        $q_vals = '';
-
-        foreach ($a as $col=>$value) {
-            $q_cols .= "$col,";
-            $q_vals .= $this->_conn->quote($value) . ",";
-        }
-
-        $q_cols = substr($q_cols, 0, -1);
-        $q_vals = substr($q_vals, 0, -1);
-
-        $q = "INSERT INTO $table ("
-            .$q_cols . ") "
-            ."VALUES (" . $q_vals . ")";
-        return $q;
-    }
-
-    /**
-     * Creates an update string from an array of col=>value and a where clause.
-     *
-     * @param string $table The name of the table
-     * @param array $a The array of data for which to get the string
-     * @param string $where The where clause
-     * @return string The sql string
-     */
-    public function get_update_string($table, $a, $where)
-    {
-        if (!$where) {
-            // enforce where clause to prevent unwanted data loss.
-            return false;
-        }
-        $q_text = '';
-
-        foreach ($a as $col => $value) {
-            $q_text .= $col . '=' . $this->_conn->quote($value) . ", ";
-        }
-
-        $q_text = substr($q_text, 0, -2);
-
-        $q = "UPDATE $table SET "
-            . $q_text . " "
-            . "WHERE " . $where;
-        return $q;
-    }
-
-    /**
      * Do a safe query, return lastInsertId if successful.
      *
      * @param string $q The sql statement

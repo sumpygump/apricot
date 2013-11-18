@@ -132,6 +132,11 @@ class Qi_Db_PdoMysql
         $keys         = array_keys($data);
         $placeholders = array_fill(0, count($keys), "?");
 
+        $applyMysqlQuotes = function($name) {
+            return '`' . $name . '`';
+        };
+        $keys = array_map($applyMysqlQuotes, $keys);
+
         $set = "(" . implode(',', $keys) . ") "
             . "VALUES (" . implode(',', $placeholders) . ")";
 
@@ -192,7 +197,7 @@ class Qi_Db_PdoMysql
     {
         $set = array();
         foreach ($data as $name => $value) {
-            $set[] = "$name=?";
+            $set[] = "`$name`=?";
         }
         $set = implode(',', $set);
 
@@ -463,7 +468,7 @@ class Qi_Db_PdoMysql
     public function getCount($table, $where)
     {
         return $this->getThing(
-            "select count(*) from $table where $where"
+            "SELECT count(*) FROM $table WHERE $where"
         );
     }
 
@@ -536,21 +541,6 @@ class Qi_Db_PdoMysql
             $err = $this->_conn->errorInfo();
             return $err[0] . ": " . $err[2];
         }
-    }
-
-    /**
-     * Escape string for sqlite use
-     *
-     * @param string $string The string to be escaped
-     * @return string The sanitized string
-     * @deprecated You should just use quote()
-     */
-    public function escape($string)
-    {
-        if (!function_exists('sqlite_escape_string')) {
-            return str_replace("'", "''", $string);
-        }
-        return sqlite_escape_string($string);
     }
 
     /**
