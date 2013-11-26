@@ -109,6 +109,10 @@ class Collection implements \Iterator, \Countable
      */
     public function current()
     {
+        if (count($this->_data) == 0) {
+            return $this->createEntity(array());
+        }
+
         return $this->createEntity($this->_data[$this->_pos]);
     }
 
