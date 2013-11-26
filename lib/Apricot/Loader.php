@@ -135,6 +135,20 @@ class Loader
     {
         $realpaths = array();
 
+        // Support autoloader to work when composed in and the Apricot lib is 
+        // in a different dir than the app classes to be autoloaded
+        if (defined('APP_ROOT')) {
+            $root = APP_ROOT;
+
+            // build paths from the root and only include them if they exist
+            foreach (self::$_paths as $name => $path) {
+                $realpath = $root . DIRECTORY_SEPARATOR . $path;
+                if (file_exists($realpath)) {
+                    $realpaths[$name] = $realpath;
+                }
+            }
+        }
+
         // Determine the app root from this file
         // TODO: Do something more robust to find the root
         $root = dirname(dirname(dirname(__FILE__)));
